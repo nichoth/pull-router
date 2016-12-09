@@ -1,0 +1,47 @@
+{
+  "name": "pull-router",
+  "version": "0.0.0",
+  "description": "High level router using pull streams",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/index.js | tap-spec"
+  },
+  "dependencies": {
+    "pull-routes": "^2.1.0",
+    "pull-scan": "^1.0.0",
+    "pull-stream": "^3.5.0",
+    "routes": "^2.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.11.1",
+    "eslint-config-minlint": "^1.0.2",
+    "pull-abortable": "^4.1.0",
+    "pull-on-abort": "0.0.0",
+    "pull-pushable": "^2.0.1",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.3"
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nichoth/pull-router.git"
+  },
+  "keywords": [
+    "pull",
+    "stream",
+    "pull-stream",
+    "router",
+    "routes",
+    "browser",
+    "client"
+  ],
+  "author": "nichoth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nichoth/pull-router/issues"
+  },
+  "homepage": "https://github.com/nichoth/pull-router#readme"
+}
