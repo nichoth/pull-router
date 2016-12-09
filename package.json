@@ -1,6 +1,6 @@
 {
   "name": "pull-router",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "High level router using pull streams",
   "main": "index.js",
   "scripts": {
