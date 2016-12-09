@@ -4,6 +4,8 @@
   "description": "High level router using pull streams",
   "main": "index.js",
   "scripts": {
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags && npm publish",
     "test": "node test/index.js | tap-spec"
   },
   "dependencies": {
@@ -16,7 +18,6 @@
     "eslint": "^3.11.1",
     "eslint-config-minlint": "^1.0.2",
     "pull-abortable": "^4.1.0",
-    "pull-on-abort": "0.0.0",
     "pull-pushable": "^2.0.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.3"
