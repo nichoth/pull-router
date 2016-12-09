@@ -1,60 +1,48 @@
 var S = require('pull-stream')
 var Router = require('../')
-var Source = require('../source')
-var Subscribe = require('../subscribe')
+var assert = require('assert')
 
 // through streams go here
-var MyRouter = Router([
-    ['/foo', function (params, rt) {
+var TestRouter = Router([
+    ['/foo', function (params, route) {
         return S.map(function (ev) {
             return { count: ev }
         })
     }]
 ])
 
-// duplex streams go here
-var router = MyRouter([
-    ['/foo', function (params, rt) {
+var router = TestRouter([
+    // duplex streams go here
+    ['/foo', function (params, route) {
         return {
-            source: S.values([1,2,3]),
-            sink: S.drain(function onData (ev) {
-                console.log('********data', ev)
-            }, function onEnd (err) {
-                console.log('veiw-end', err)
-            })
+            source: S.once(1),
+            sink: S.collect(function (err, res) {
+                // our source is piped through the transform
+                // we defined above
+                console.log(route.route)  // => /foo
+                console.log(res[0])  // => { count: 1 }
+                assert.equal(res[0].count, 1)
+            }),
+            // in here we would do something to connect a view
+            // to the source and sink.
+            view: 'test'
         }
     }]
 ])
 
-var source = Source()
-source.push('/foo')
+// `router()` returns a source stream that emits views and
+// listens for route events (in a browser).
+// In node call `router().push()` -- `router()` is an instance of
+// pull-pushable.
+// When the route changes, this stream will pipe the new route and
+// unpipe the old one
+var routeStream = router()
 S(
-    source,
-    router,
-    Subscribe(),
-    S.drain(function onRoute (streams) {
-        var view = streams[0]
-        var ctrl = streams[1]
-        S(view, ctrl, view)
-    }, function onEnd (err) {
-        console.log('end', err)
+    routeStream,
+    S.drain(function onRoute (view) {
+        assert.equal(view, 'test')
     })
 )
+routeStream.push('/foo')
+routeStream.end()
 
-
-
-// S(
-//     router(),
-//     S.drain(function onRoute (rt) {
-//     }, function onEnd (err) {
-//     })
-// )
-
-// S(
-//     router.source,
-//     router.match,
-//     router.subscribe,
-//     S.drain(function onRoute (rt) {
-//     }, function onEnd (err) {
-//     })
-// )
