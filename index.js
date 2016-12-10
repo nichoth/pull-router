@@ -5,8 +5,8 @@ var Subscribe = require('./subscribe')
 
 function Router (ctrlRoutes) {
     return function router (viewRoutes) {
-        function RouteStream () {
-            var source = Source()
+        function RouteStream (routeEvent) {
+            var source = Source(routeEvent)
             var match = Match(ctrlRoutes, viewRoutes)
             var sub = Subscribe()
             var stream = S(
