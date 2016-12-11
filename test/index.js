@@ -57,6 +57,53 @@ test('route matching', function (t) {
 })
 
 
+test('routing', function (t) {
+    t.plan(4)
+
+    var TestRouter = Router(rs)
+    // duplex streams go here
+    var router = TestRouter([
+        ['/foo', function fooView (params, rt) {
+            var p = Pushable()
+            return {
+                source: p,
+                sink: S.collect(function (err, res) {
+                    t.error(err)
+                }),
+                view: 'foo'
+            }
+        }],
+        ['/bar', function barView (params, rt) {
+            var p = Pushable()
+            return {
+                source: p,
+                sink: S.collect(function (err, res) {
+                    t.error(err)
+                }),
+                view: 'bar'
+            }
+        }]
+    ])
+
+    var r = router()
+    S(
+        r,
+        S.collect(function (err, res) {
+            t.error(err)
+            t.deepEqual(res, [
+                'foo',
+                'bar',
+                'foo'
+            ], 'should route the stuff')
+        })
+    )
+    r.push('/foo')
+    r.push('/bar')
+    r.push('/foo')
+    r.end()
+})
+
+
 test('subscribe', function (t) {
     t.plan(7)
 
